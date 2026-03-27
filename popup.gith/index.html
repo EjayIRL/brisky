@@ -2,57 +2,59 @@
 <html>
 <head>
     <style>
-        body { margin: 0; background: black; overflow: hidden; }
-        #player { width: 100vw; height: 100vh; border: none; }
+        body { margin: 0; background: black; overflow: hidden; font-family: Arial, sans-serif; }
+        
+        /* The Video Player */
+        video { 
+            width: 100vw; 
+            height: 100vh; 
+            object-fit: cover; 
+        }
+
+        /* The Centered Text */
+        .overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            text-shadow: 3px 3px 10px rgba(0,0,0,0.8);
+            pointer-events: none; /* Let clicks pass through to video */
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
-    <div id="player"></div>
+
+    <div class="overlay-text">Youtube - @blake1h1</div>
+
+    <video id="myVideo" autoplay loop playsinline crossorigin="anonymous">
+        <source src="https://brisky.infinityfree.me/Lmaoooooo.mp4" type="video/mp4">
+    </video>
 
     <script>
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        const video = document.getElementById('myVideo');
 
-        var player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '100%',
-                width: '100%',
-                videoId: '5BLO9QAcgjs',
-                playerVars: { 
-                    'autoplay': 1, 
-                    'controls': 0, 
-                    'start': 1000,
-                    'loop': 1,
-                    'playlist': '5BLO9QAcgjs' // Required for looping
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            event.target.setVolume(100);
-            event.target.playVideo();
-            
-            // LOUDNESS HACK (400% Boost)
+        // LOUDNESS HACK (400% Volume Boost)
+        window.onclick = function() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const iframe = document.getElementsByTagName('iframe')[0];
-                const source = audioCtx.createMediaElementSource(iframe);
+                const source = audioCtx.createMediaElementSource(video);
                 const gainNode = audioCtx.createGain();
                 
                 gainNode.gain.value = 4.0; // 4x Volume
                 
                 source.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
+                
+                video.play();
+                console.log("Audio Boosted!");
             } catch(e) {
-                console.log("Audio boost blocked until user clicks screen");
+                console.log("Audio boost failed - interaction needed");
             }
-        }
+        };
     </script>
 </body>
 </html>
