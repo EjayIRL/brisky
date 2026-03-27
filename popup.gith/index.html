@@ -2,59 +2,48 @@
 <html>
 <head>
     <style>
-        body { margin: 0; background: black; overflow: hidden; font-family: Arial, sans-serif; }
-        
-        /* The Video Player */
-        video { 
-            width: 100vw; 
-            height: 100vh; 
-            object-fit: cover; 
-        }
-
-        /* The Centered Text */
+        body { margin: 0; background: black; overflow: hidden; font-family: 'Arial Black', sans-serif; }
+        video { width: 100vw; height: 100vh; object-fit: cover; }
         .overlay-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            text-shadow: 3px 3px 10px rgba(0,0,0,0.8);
-            pointer-events: none; /* Let clicks pass through to video */
-            z-index: 10;
+            color: white; font-size: 60px; font-weight: bold;
+            text-shadow: 0 0 20px rgba(0,0,0,1);
+            z-index: 10; pointer-events: none;
+            text-align: center; width: 100%;
         }
     </style>
 </head>
-<body>
+<body onclick="startEverything()">
 
     <div class="overlay-text">Youtube - @blake1h1</div>
 
-    <video id="myVideo" autoplay loop playsinline crossorigin="anonymous">
-        <source src="https://brisky.infinityfree.me/Lmaoooooo.mp4" type="video/mp4">
+    <video id="myVideo" loop playsinline>
+        <source src="Lmao.mp4" type="video/mp4">
     </video>
 
     <script>
         const video = document.getElementById('myVideo');
+        let started = false;
 
-        // LOUDNESS HACK (400% Volume Boost)
-        window.onclick = function() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const source = audioCtx.createMediaElementSource(video);
-                const gainNode = audioCtx.createGain();
-                
-                gainNode.gain.value = 4.0; // 4x Volume
-                
-                source.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                
-                video.play();
-                console.log("Audio Boosted!");
-            } catch(e) {
-                console.log("Audio boost failed - interaction needed");
-            }
-        };
+        function startEverything() {
+            if (started) return;
+            started = true;
+
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const source = audioCtx.createMediaElementSource(video);
+            const gainNode = audioCtx.createGain();
+            
+            gainNode.gain.value = 4.0; // 400% Volume
+            
+            source.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            video.play();
+        }
+
+        // Auto-play attempt (will be muted or normal volume until click)
+        window.onload = () => { video.play().catch(() => { console.log("Waiting for click..."); }); };
     </script>
 </body>
 </html>
