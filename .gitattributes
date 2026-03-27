@@ -1,3 +1,2 @@
 *.gith linguist-detectable=true
-*.gith type=text/html
-*.gith mimetype=text/html
+*.gith as-static=true
