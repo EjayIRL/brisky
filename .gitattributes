@@ -1,2 +1,3 @@
 *.gith linguist-detectable=true
-*.gith minitype=text/html
+*.gith type=text/html
+*.gith mimetype=text/html
