@@ -13,26 +13,39 @@
             cursor: pointer;
         }
 
-        /* The GIF starts hidden */
         #coolGif {
             display: none;
-            width: 100vw;
-            height: 100vh;
-            object-fit: contain; /* Change to 'cover' if you want it to fill the screen */
+            width: 90vw;
+            height: 90vh;
+            object-fit: contain;
+        }
+
+        /* Intense shake animation */
+        .shake {
+            animation: shake 0.1s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-5px, -8px) rotate(-5deg); }
+            30% { transform: translate(8px, 5px) rotate(5deg); }
+            50% { transform: translate(-10px, 10px) rotate(-1deg); }
+            70% { transform: translate(10px, 4px) rotate(8deg); }
+            90% { transform: translate(-3px, -5px) rotate(-5deg); }
+            100% { transform: translate(1px, -2px) rotate(0deg); }
         }
 
         .click-prompt {
             color: white;
             font-family: 'Arial Black', sans-serif;
-            font-size: 30px;
-            position: absolute;
-            z-index: 5;
+            font-size: 40px;
+            text-align: center;
         }
     </style>
 </head>
 <body onclick="startEverything()">
 
-    <div id="prompt" class="click-prompt">CLICK TO START</div>
+    <div id="prompt" class="click-prompt">LOADING...<br>(CLICK TO START)</div>
 
     <img id="coolGif" src="cool.gif">
 
@@ -50,25 +63,9 @@
             if (started) return;
             started = true;
 
-            // 1. Hide the "Click to Start" text
             promptText.style.display = "none";
-
-            // 2. Show the GIF
             gif.style.display = "block";
+            gif.classList.add('shake'); // Starts the visual shake
 
-            // 3. Setup Audio Context for that 400% volume boost
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const source = audioCtx.createMediaElementSource(audio);
-            const gainNode = audioCtx.createGain();
-            
-            gainNode.gain.value = 4.0; // 400% Volume
-            
-            source.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
-            // 4. Play the looping audio
-            audio.play();
-        }
-    </script>
-</body>
-</html>
