@@ -2,36 +2,63 @@
 <html>
 <head>
     <style>
-        body { margin: 0; background: black; overflow: hidden; font-family: 'Arial Black', sans-serif; }
-        video { width: 100vw; height: 100vh; object-fit: cover; }
-        .overlay-text {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            color: white; font-size: 60px; font-weight: bold;
-            text-shadow: 0 0 20px rgba(0,0,0,1);
-            z-index: 10; pointer-events: none;
-            text-align: center; width: 100%;
+        body { 
+            margin: 0; 
+            background: black; 
+            overflow: hidden; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh;
+            cursor: pointer;
+        }
+
+        /* The GIF starts hidden */
+        #coolGif {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain; /* Change to 'cover' if you want it to fill the screen */
+        }
+
+        .click-prompt {
+            color: white;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 30px;
+            position: absolute;
+            z-index: 5;
         }
     </style>
 </head>
 <body onclick="startEverything()">
 
-    <div class="overlay-text">Youtube - @blake1h1</div>
+    <div id="prompt" class="click-prompt">CLICK TO START</div>
 
-    <video id="myVideo" loop playsinline>
-        <source src="Lmao.mp4" type="video/mp4">
-    </video>
+    <img id="coolGif" src="cool.gif">
+
+    <audio id="myAudio" loop>
+        <source src="sound.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
-        const video = document.getElementById('myVideo');
+        const gif = document.getElementById('coolGif');
+        const audio = document.getElementById('myAudio');
+        const promptText = document.getElementById('prompt');
         let started = false;
 
         function startEverything() {
             if (started) return;
             started = true;
 
+            // 1. Hide the "Click to Start" text
+            promptText.style.display = "none";
+
+            // 2. Show the GIF
+            gif.style.display = "block";
+
+            // 3. Setup Audio Context for that 400% volume boost
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const source = audioCtx.createMediaElementSource(video);
+            const source = audioCtx.createMediaElementSource(audio);
             const gainNode = audioCtx.createGain();
             
             gainNode.gain.value = 4.0; // 400% Volume
@@ -39,11 +66,9 @@
             source.connect(gainNode);
             gainNode.connect(audioCtx.destination);
             
-            video.play();
+            // 4. Play the looping audio
+            audio.play();
         }
-
-        // Auto-play attempt (will be muted or normal volume until click)
-        window.onload = () => { video.play().catch(() => { console.log("Waiting for click..."); }); };
     </script>
 </body>
 </html>
